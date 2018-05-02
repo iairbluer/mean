@@ -1,0 +1,105 @@
+﻿<section>
+  <div class="page-header">
+    <h1>
+      Accounts
+      <!-- <a class="btn btn-primary pull-right" data-ui-sref="admin.accounts.create-adwords">
+        <i class="glyphicon glyphicon-plus"></i>
+      </a> -->
+    </h1>
+  </div>
+  <div class="col-md-12 text-center">
+      <div class="acc-holder">
+        <ul>
+          <li ng-repeat="account in vm.accounts">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6 col-md-6 flex-start-center flex-row">
+                <img src="/modules/users/client/img/buttons/googleAdwords.png" alt=""/>
+                <label>Account Customer Id: {{ account.customerId }}<br/>Account Customer Name: {{ account.customerName }}</label>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-6 flex-end-center flex-row actions">
+                <a href="#" ui-sref="accounts.view({ accountId: account._id })" class="btn btn-info btn-info-icon pull-right">
+                  <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+                  VIEW
+                </a>
+                <a href="#" ng-click="vm.connectAccount(account);" class="btn btn-success btn-green-icon pull-right">
+                  <i class="glyphicon glyphicon-log-in" aria-hidden="true"></i>
+                  CONNECT
+                </a>
+                <a href="#" ng-click="vm.remove(account)" class="btn btn-daner btn-red-icon pull-right">
+                  <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                  DELETE
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <!-- <div class="row">
+          <div class="col-xs-12">
+          <a href="#" class="btn btn-default btn-orange-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i>ADD AN ACCOUNT</a>
+        </div> -->
+      </div>
+    </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.accounts.$resolved && !vm.accounts.length"> 
+    No Accounts yet...
+  </div>
+  <h3 class="col-md-12 text-center">Add an account:</h3>
+    <!-- CONNECT A FACEBOOK ADS ACCOUNT -->
+    <div class="col-md-12 text-center">
+    <div class="social-account-container">
+        <!-- ng-click="vm.callOauthProvider('/api/auth/facebook')" -->
+        <!-- ui-sref="admin.accounts.create-facebook" -->
+      <a href="">
+        <img class="social-button" ng-src="/modules/users/client/img/buttons/facebookAds.png">
+        <span class="btn btn-success btn-add-remove-account">
+          <i class="glyphicon glyphicon-plus"></i>
+        </span>
+      </a>
+    </div>
+    <!-- CONNECT GOOGLE ADWORDS ACCOUNT -->
+    <div class="social-account-container">
+        <!-- ng-click="vm.callOauthProvider('/api/auth/google')" -->
+      <a href="" ui-sref="admin.accounts.create-adwords">
+        <img class="social-button" ng-src="/modules/users/client/img/buttons/googleAdwords.png">
+        <span class="btn btn-success btn-add-remove-account">
+          <i class="glyphicon glyphicon-plus"></i>
+        </span>
+      </a>
+    </div>
+    <!-- CONNECT BING ACCOUNT -->
+    <div class="social-account-container" >
+      <!-- ng-click="vm.callOauthProvider('/api/auth/twitter')" -->
+      <a href="" ng-click="vm.showAddAccountDialog('bing');">
+        <img class="social-button" ng-src="/modules/users/client/img/buttons/bingAds.png">
+        <span class="btn btn-success btn-add-remove-account">
+          <i class="glyphicon glyphicon-plus"></i>
+        </span>
+      </a>
+    </div>
+    <!-- CONNECT DOUBLECLICK ACCOUNT -->
+    <!-- <div class="social-account-container">
+      <a href="" ng-click="vm.callOauthProvider('/api/auth/linkedin')">
+        <img class="social-button" ng-src="/modules/users/client/img/buttons/linkedin.png">
+        <span class="btn btn-success btn-add-remove-account">
+          <i class="glyphicon glyphicon-plus"></i>
+        </span>
+      </a>
+    </div> -->
+
+    <!-- <div class="social-account-container" ng-hide="vm.isConnectedSocialAccount('github')">
+      <a href="" ng-click="vm.callOauthProvider('/api/auth/github')">
+        <img class="social-button" ng-src="/modules/users/client/img/buttons/github.png">
+        <span class="btn btn-success btn-add-remove-account">
+          <i class="glyphicon glyphicon-plus"></i>
+        </span>
+      </a>
+    </div> -->
+    <!-- <div class="social-account-container" ng-hide="vm.isConnectedSocialAccount('paypal')">
+      <a href="" ng-click="vm.callOauthProvider('/api/auth/paypal')">
+        <img class="social-button" ng-src="/modules/users/client/img/buttons/paypal.png">
+        <span class="btn btn-success btn-add-remove-account">
+          <i class="glyphicon glyphicon-plus"></i>
+        </span>
+      </a>
+    </div> -->
+    </div>
+</section>

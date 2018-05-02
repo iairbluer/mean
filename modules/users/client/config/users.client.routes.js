@@ -41,13 +41,28 @@
       })
       .state('settings.accounts', {
         url: '/accounts',
-        templateUrl: '/modules/users/client/views/settings/manage-social-accounts.client.view.html',
-        controller: 'SocialAccountsController',
+        templateUrl: '/modules/users/client/views/settings/manage-accounts.client.view.html',
+        controller: 'AccountsController',
         controllerAs: 'vm',
         data: {
           pageTitle: 'Settings accounts'
+        },
+        resolve: {
+          accountsResolve: getAccounts
         }
       })
+      // .state('settings.accounts.viewAccount', {
+      //   url: '/account/:accountId',
+      //   templateUrl: '/modules/users/client/views/settings/view-account.client.view.html',
+      //   controller: 'AccountController',
+      //   controllerAs: 'vm',
+      //   data: {
+      //     pageTitle: 'Settings accounts'
+      //   },
+      //   resolve: {
+      //     accountResulve: getAccount
+      //   }
+      // })
       .state('settings.picture', {
         url: '/picture',
         templateUrl: '/modules/users/client/views/settings/change-profile-picture.client.view.html',
@@ -124,5 +139,19 @@
           pageTitle: 'Password reset form'
         }
       });
+      getAccounts.$inject = ['$stateParams', 'AccountsService'];
+      
+      function getAccounts($stateParams, AccountsService) {
+        return AccountsService.query().$promise;
+      }
+      
+      getAccount.$inject = ['$stateParams', 'AccountsService'];
+      
+      function getAccount($stateParams, AccountsService) {
+        return AccountsService.get({
+          accountId: $stateParams.accountId
+        }).$promise;
+      }
+
   }
 }());

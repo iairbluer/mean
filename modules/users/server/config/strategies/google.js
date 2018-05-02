@@ -9,21 +9,29 @@ var passport = require('passport'),
 
 module.exports = function (config) {
   // Use google strategy
+  if (!process.env.GOOGLE_ID) {
+    console.log('NO GOOGLE ID');
+  } else {
+    console.log('GOOGLE ID = ' + process.env.GOOGLE_ID);
+  }
   passport.use(new GoogleStrategy({
-    clientID: config.google.clientID,
+    clientID: process.env.GOOGLE_ID || config.google.clientID,
     clientSecret: config.google.clientSecret,
-    callbackURL: config.google.callbackURL,
+    callbackURL: process.env.GOOGLE_CALLBACK || config.google.callbackURL,
     passReqToCallback: true,
-    scope: ['https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email'
+    scope: [
+      // 'https://www.googleapis.com/auth/userinfo.profile',
+      // 'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/adwords'
     ]
   },
     function (req, accessToken, refreshToken, profile, done) {
+      console.log('IN CALLBACK');
       // Set the provider data and include tokens
       var providerData = profile._json;
       providerData.accessToken = accessToken;
       providerData.refreshToken = refreshToken;
-
+      // console.log('PROVIDER DATA = ' + JSON.stringify(providerData));
       // Create the user OAuth profile
       var providerUserProfile = {
         firstName: profile.name.givenName,
@@ -36,7 +44,7 @@ module.exports = function (config) {
         providerIdentifierField: 'id',
         providerData: providerData
       };
-
+      console.log('PROVIDER USER PROFILE = ' + JSON.stringify(providerUserProfile));
       // Save the user OAuth profile
       users.saveOAuthUserProfile(req, providerUserProfile, done);
     }));

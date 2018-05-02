@@ -35,7 +35,7 @@
     });
 
     menuService.addSubMenuItem('account', 'settings', {
-      title: 'Manage Social Accounts',
+      title: 'Manage Accounts',
       state: 'settings.accounts'
     });
   }

@@ -8,7 +8,7 @@
   position: relative;
 }
 .btn-add-remove-account {
-  pointer-events: none;
+  cursor: pointer;
   position: absolute;
   right: 10px;
   top: 10px;

@@ -4,7 +4,7 @@ var defaultEnvConfig = require('./default');
 
 module.exports = {
   db: {
-    uri: process.env.MONGOHQ_URL || process.env.MONGODB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-dev',
+    uri: process.env.MONGOHQ_URL || process.env.MONGODB_URI || 'mongodb://NeeflaAtlas:Neefla4040!@cluster0-shard-00-00-jmrhr.gcp.mongodb.net:27017,cluster0-shard-00-01-jmrhr.gcp.mongodb.net:27017,cluster0-shard-00-02-jmrhr.gcp.mongodb.net:27017/neefla-webapp?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin', //'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-dev',
     options: {},
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false
@@ -36,8 +36,8 @@ module.exports = {
     callbackURL: '/api/auth/twitter/callback'
   },
   google: {
-    clientID: process.env.GOOGLE_ID || 'APP_ID',
-    clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',
+    clientID: process.env.GOOGLE_ID || '478823627931-iprpqo38i3q2sp1t1pbbmhmaumkqe4vs.apps.googleusercontent.com',
+    clientSecret: process.env.GOOGLE_SECRET || 'jIB7IJIaVikK21dzZyl2x_eR',
     callbackURL: '/api/auth/google/callback'
   },
   linkedin: {

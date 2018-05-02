@@ -1,0 +1,15 @@
+<section>
+  <div class="page-header">
+    <h1 ng-bind="vm.account.customerName"></h1>
+  </div>
+  <small>
+    <em class="text-muted">
+      Account Connected on
+      <span ng-bind="vm.account.created | date:'mediumDate'"></span>
+      by
+      <span ng-if="vm.account.user" ng-bind="vm.account.user.displayName"></span>
+      <span ng-if="!vm.account.user">Deleted User</span>
+    </em>
+  </small>
+  <!-- <p class="lead" ng-bind="vm.account.content"></p> -->
+</section>

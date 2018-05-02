@@ -46,7 +46,7 @@
       changePassword: function (passwordDetails) {
         return this.updatePassword(passwordDetails).$promise;
       },
-      removeSocialAccount: function (provider) {
+      removeAccount: function (provider) {
         return this.deleteProvider({
           provider: provider // api expects provider as a querystring parameter
         }).$promise;

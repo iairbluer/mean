@@ -84,7 +84,14 @@ exports.signout = function (req, res) {
  * OAuth provider call
  */
 exports.oauthCall = function (req, res, next) {
+  console.log('OAUTH CALLED SERVER');
   var strategy = req.params.strategy;
+  var accountId = req.params.accountId;
+  console.log('STRATEGY = ' + JSON.stringify(strategy));
+  console.log('ACCOUNT ID = ' + accountId);
+  process.env.GOOGLE_ID = accountId;
+  process.env.GOOGLE_CALLBACK = '/api/auth/google/callback/clientId/' + accountId;
+  console.log('GOOGLE CALLBACK = ' + process.env.GOOGLE_CALLBACK);
   // Authenticate
   passport.authenticate(strategy)(req, res, next);
 };
@@ -93,8 +100,10 @@ exports.oauthCall = function (req, res, next) {
  * OAuth callback
  */
 exports.oauthCallback = function (req, res, next) {
+  console.log('OAUTH CALLBACK CALLED SERVER');
   var strategy = req.params.strategy;
-
+  var accountId = req.params.accountId;
+  process.env.GOOGLE_ID = accountId;
   // info.redirect_to contains inteded redirect path
   passport.authenticate(strategy, function (err, user, info) {
     if (err) {
@@ -103,13 +112,13 @@ exports.oauthCallback = function (req, res, next) {
     if (!user) {
       return res.redirect('/authentication/signin');
     }
-    req.login(user, function (err) {
-      if (err) {
-        return res.redirect('/authentication/signin');
-      }
-
-      return res.redirect(info.redirect_to || '/');
-    });
+    return res.json(user);
+    // req.login(user, function (err) {
+    //   if (err) {
+    //     return res.redirect('/authentication/signin');
+    //   }
+    //   return res.redirect(info.redirect_to || '/');
+    // });
   })(req, res, next);
 };
 
