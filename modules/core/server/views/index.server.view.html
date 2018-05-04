@@ -1,5 +1,12 @@
 {{!< layout}}
-
-{{#contentFor 'content'}}
-  <section ui-view></section>
-{{/contentFor}}
+  {{#contentFor 'content'}}
+    <section ui-view></section>
+    <footer  class="col-xs-12 flex-start-center flex-row footer">
+        <div class="col-xs-12 text-center">
+            <p>Copyright &copy; Neefla Ltd. 2018</p>
+            <a ui-sref="terms">Terms of Use</a>
+            <a ui-sref="privacy">Privacy Policy</a>
+        </div>
+    </footer>
+  {{/contentFor}}
+  

@@ -248,7 +248,9 @@ section {
 .main-content {
     background-color: #353b46;
     width: 100%;
+    height: inherit; /*calc(100vh - 100px);*/
     float: left;
+    margin-top:80px;
 }
 .main-content.gray .content-holder {
     width: 100%;
@@ -261,6 +263,7 @@ section {
     float: left;
     overflow: auto;
     width: 250px;
+    height:100%;
 }
 .main-content .left-menu ul {
     padding: 0;
@@ -311,26 +314,26 @@ section {
     height: 35px;
 }
 .main-content .left-menu ul li a span.icon1 {
-    background-image: url(../images/icon1.png);
+    background-image: url('/modules/core/client/img/markoImages/icon1.png');
 }
 .main-content .left-menu ul li a span.icon2 {
-    background-image: url(../images/icon2.png);
+    background-image: url('/modules/core/client/img/markoImages/icon2.png');
 }
 .main-content .left-menu ul li a span.icon3 {
-    background-image: url(../images/icon3.png);
+    background-image: url('/modules/core/client/img/markoImages/icon3.png');
 }
 .main-content .left-menu ul li a span.icon4 {
-    background-image: url(../images/icon4.png);
+    background-image: url('/modules/core/client/img/markoImages/icon4.png');
 }
 .main-content .left-menu ul li a span.icon5 {
-    background-image: url(../images/icon5.png);
+    background-image: url('/modules/core/client/img/markoImages/icon5.png');
 }
 .main-content .left-menu ul li a:hover span {
     background-position: 0 -35px;
 }
 .main-content .content-holder {
     float: left;
-    width: calc(100% - 250px);
+    width: calc(100%);
     /*height: calc(100vh - 160px);*/
     min-height: 814px;
     background-color: #f7f7f7;
@@ -365,7 +368,7 @@ section {
     height: 25px;
     background-repeat: no-repeat;
     background-position: 0 0;
-    background-image: url(../images/icon6b.png);
+    background-image: url('/modules/core/client/img/markoImages/icon6b.png');
     float: right;
     margin: 11px 15px 0;
 }
@@ -381,7 +384,7 @@ section {
     height: 25px;
     background-repeat: no-repeat;
     background-position: 0 0;
-    background-image: url(../images/icon6b.png);
+    background-image: url('/modules/core/client/img/markoImages/icon6b.png');
     float: right;
     margin: 11px 15px 0;
 }
@@ -400,7 +403,7 @@ section {
 .login-bg {
     background-repeat: no-repeat;
     background-position: center center;
-    background-image: url(../images/login-bg.jpg);
+    background-image: url('/modules/core/client/img/markoImages/');
     background-size: cover;
 }
 #login-form {
@@ -546,7 +549,7 @@ label {
 }
 .datepicker:not(.datepicker-dropdown) {
     padding-left: 60px;
-    background-image: url(../images/ico8.png);
+    background-image: url('/modules/core/client/img/markoImages/ico8.png');
     background-repeat: no-repeat;
     background-position: 17px center;
 }

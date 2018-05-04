@@ -87,6 +87,10 @@ var UserSchema = new Schema({
     lowercase: true,
     trim: true
   },
+  accounts : {
+    type: [Schema.ObjectId],
+    ref: 'Account'
+  },
   password: {
     type: String,
     default: ''

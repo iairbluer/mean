@@ -23,6 +23,18 @@
           roles: ['admin']
         }
       })
+      .state('admin.account', {
+        url: '/account/:customerId',
+        templateUrl: '/modules/accounts/client/views/admin/view-account.client.view.html',
+        controller: 'AccountsAdminController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin']
+        },
+        resolve: {
+          accountResolve: getAccount
+        }
+      })
       .state('admin.accounts.create-adwords', {
         url: '/create',
         templateUrl: '/modules/accounts/client/views/admin/form-account.client.view.html',
@@ -54,7 +66,7 @@
 
   function getAccount($stateParams, AccountsService) {
     return AccountsService.get({
-      accountId: $stateParams.accountId,
+      customerId: $stateParams.customerId,
     }).$promise;
   }
 

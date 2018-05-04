@@ -6,12 +6,14 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  validator = require('validator'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
  * Show the current user
  */
 exports.read = function (req, res) {
+  console.log('REQ MODEL = ' + JSON.stringify(req.model));
   res.json(req.model);
 };
 
@@ -69,7 +71,32 @@ exports.list = function (req, res) {
     res.json(users);
   });
 };
+/**
+ * Send User
+ */
+exports.me = function (req, res) {
+  // Sanitize the user - short term solution. Copied from core.server.controller.js
+  // TODO create proper passport mock: See https://gist.github.com/mweibel/5219403
+  var safeUserObject = null;
+  if (req.user) {
+    safeUserObject = {
+      _id: req.user._id,
+      displayName: validator.escape(req.user.displayName),
+      provider: validator.escape(req.user.provider),
+      username: validator.escape(req.user.username),
+      created: req.user.created.toString(),
+      roles: req.user.roles,
+      profileImageURL: req.user.profileImageURL,
+      email: validator.escape(req.user.email),
+      lastName: validator.escape(req.user.lastName),
+      firstName: validator.escape(req.user.firstName),
+      additionalProvidersData: req.user.additionalProvidersData,
+      accounts: req.user.accounts
+    };
+  }
 
+  res.json(safeUserObject || null);
+};
 /**
  * User middleware
  */

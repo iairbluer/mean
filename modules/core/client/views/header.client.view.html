@@ -28,7 +28,7 @@
                           <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                          <li ui-sref-active="active" ng-repeat="item in vm.accountMenu.items">
+                          <li ui-sref-active="active" ng-repeat="item in vm.profileMenu.items">
                             <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
                           </li>
                           <li class="divider"></li>
@@ -39,31 +39,54 @@
                       </li>
                     </ul>
                 </li>  
-            </ul>
-            <ul class="nav nav-pills pull-right">
+              </ul>
+              <ul class="nav nav-pills pull-right">
                 <!-- <li class="flex-center-center flex-row"><a ng-href="profile"><img ng-show="!vm.authentication.user" src="/modules/core/client/img/markoImages/ico1.png" alt=""/><img ng-show="vm.authentication.user" src="/modules/core/client/img/markoImages/user.png" alt=""/> <label>Welcome,<br/><span> {{ vm.authentication.user.displayName || 'Guest' }} </span></label></a></li>   -->
-                <li class="flex-center-center flex-row text-center" ng-show="!vm.authentication.user"><a href="https://www.neefla.com/#requestDemo" target="_blank"><img src="/modules/core/client/img/markoImages/ico30.png" alt=""/> <span>REQUEST<br/>A DEMO</span></a></li>
-                <li class="flex-center-center flex-row" ng-show="!vm.authentication.user"><div class="holder"><img src="/modules/core/client/img/markoImages/ico4.png" alt=""/> <span>LOGIN</span></div></li>
-                <!--<li class="flex-center-center flex-row" ng-show="!main.isLoggedIn"><a ng-href="/login"><img src="assets/images/ico4.png" alt=""/> <span>LOGIN</span></a></li>-->
-                <li class="flex-center-center flex-row" ng-show="vm.authentication.user"><a ng-href="/account"><img src="/modules/core/client/img/markoImages/ico1.png" alt=""/> <span>ACCOUNT</span></a></li>
-                <li class="flex-center-center flex-row" ng-show="vm.authentication.user"><a ng-href="/profile"><img src="/modules/core/client/img/markoImages/ico2.png" alt=""/> <span>PROFILE</span></a></li>
-                <li class="flex-center-center flex-row" ng-show="vm.authentication.user && vm.authentication.user.roles.indexOf('admin') !== -1">
-                  <ul class="nav navbar-nav" ng-if="vm.menu.shouldRender(vm.authentication.user);">
-                    <li ng-repeat="item in vm.menu.items | orderBy: 'position'" ng-if="item.shouldRender(vm.authentication.user);" ng-switch="item.type" ng-class="{ dropdown: item.type === 'dropdown' }" ui-sref-active="active" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
-                      <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button">
-                        <img src="/modules/core/client/img/markoImages/ico3.png" alt=""/>
-                        {{::item.title}}&nbsp;<span class="caret"></span></a>
-                        <ul ng-switch-when="dropdown" class="dropdown-menu">
-                          <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(vm.authentication.user);">
-                            <a ui-sref="{{subitem.state}}({{subitem.params}})" ng-bind="subitem.title"></a>
-                          </li>
-                        </ul>
-                      <a ng-switch-default ui-sref="{{item.state}}" ng-bind="item.title"></a>
-                    </li>
-                  </ul>
-                    
+                <li class="flex-center-center flex-row text-center" ng-show="!vm.authentication.user">
+                  <a href="https://www.neefla.com/#requestDemo" target="_blank">
+                    <img src="/modules/core/client/img/markoImages/ico30.png" alt=""/>
+                    <span>REQUEST<br/>A DEMO</span>
+                  </a>
                 </li>
-                <li class="flex-center-center flex-row" ng-show="vm.authentication.user"><a href="#" ng-click="main.logout();"><img src="/modules/core/client/img/markoImages/ico4.png" alt=""/> <span>LOGOUT</span></a></li>
+                <li class="flex-center-center flex-row" ng-show="!vm.authentication.user">
+                  <div class="holder">
+                    <img src="/modules/core/client/img/markoImages/ico4.png" alt=""/>
+                    <span>LOGIN</span>
+                  </div>
+                </li>
+                <!-- class="flex-center-center flex-row" -->
+                <!-- <li > -->
+                  <!-- <ul class="nav navbar-nav" ng-if="vm.menu.shouldRender(vm.authentication.user);"> -->
+                  <li ng-show="vm.authentication.user &&
+                      vm.authentication.user.roles.indexOf('admin') !== -1"
+                      class="flex-center-center flex-row"
+                      ng-repeat="item in vm.menu.items | orderBy: 'position'"
+                      ng-if="item.shouldRender(vm.authentication.user);"
+                      ng-switch="item.type"
+                      ng-class="{ dropdown: item.type === 'dropdown' }"
+                      ui-sref-active="active"
+                      class="{{item.class}}"
+                      uib-dropdown="item.type === 'dropdown'">
+                    <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button">
+                      <img ng-src="/modules/core/client/img/markoImages/ico{{($index + 2)}}.png" alt=""/>
+                      {{::item.title}}&nbsp;<span class="caret"></span>
+                    </a>
+                    <ul ng-switch-when="dropdown" class="dropdown-menu">
+                      <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(vm.authentication.user);">
+                        <a ui-sref="{{subitem.state}}({{subitem.params}})" ng-bind="subitem.title"></a>
+                      </li>
+                    </ul>
+                    <a ng-switch-default ui-sref="{{item.state}}" ng-bind="item.title"></a>
+                  </li>
+                  <!-- </ul> -->
+                    
+                <!-- </li> -->
+                <li class="flex-center-center flex-row" ng-show="vm.authentication.user">
+                  <a href="/api/auth/signout" target="_self">
+                    <img src="/modules/core/client/img/markoImages/ico4.png" alt=""/>
+                    <span>LOGOUT</span>
+                  </a>
+                </li>
             </ul>
         </nav>
     </div>

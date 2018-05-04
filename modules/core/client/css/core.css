@@ -1,5 +1,13 @@
 .content {
-  margin-top: 50px;
+  width: 85% !important;
+  height: calc(100vh - 100px);
+  overflow-y:scroll;
+  overflow-x:hidden;
+  float:right;
+}
+main {
+  width: 100% !important;
+  height: calc(100vh - 100px) !important;
 }
 .undecorated-link:hover {
   text-decoration: none;

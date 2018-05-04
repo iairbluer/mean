@@ -3,7 +3,7 @@
 
   // Setting up route
   angular
-    .module('users.routes')
+   .module('users.routes')
     .config(routeConfig);
 
   routeConfig.$inject = ['$stateProvider'];
@@ -139,19 +139,18 @@
           pageTitle: 'Password reset form'
         }
       });
-      getAccounts.$inject = ['$stateParams', 'AccountsService'];
+    getAccounts.$inject = ['$stateParams', 'AccountsService'];
       
-      function getAccounts($stateParams, AccountsService) {
-        return AccountsService.query().$promise;
-      }
+    function getAccounts($stateParams, AccountsService) {
+      return AccountsService.query().$promise;
+    }
       
-      getAccount.$inject = ['$stateParams', 'AccountsService'];
-      
-      function getAccount($stateParams, AccountsService) {
-        return AccountsService.get({
-          accountId: $stateParams.accountId
-        }).$promise;
-      }
-
+    getAccount.$inject = ['$stateParams', 'AccountsService'];
+    
+    function getAccount($stateParams, AccountsService) {
+      return AccountsService.get({
+        accountId: $stateParams.accountId
+      }).$promise;
+    }
   }
 }());

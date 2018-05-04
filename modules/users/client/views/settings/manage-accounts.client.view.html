@@ -37,11 +37,11 @@
             </div>
         </div> -->
     </div>
-    <div ng-repeat="(providerName, providerData) in vm.user.additionalProvidersData" class="social-account-container">
-      <a href ui-sref="settings.accounts.viewAccount({ providerName: providerName, providerData: providerData.accessToken })">
-        <img class="social-button" ng-src="/modules/users/client/img/buttons/{{::providerName}}Adwords.png">
+    <div ng-repeat="(provider, providerData) in vm.user.additionalProvidersData" class="social-account-container">
+      <a href ui-sref="settings.accounts.viewAccount({ provider: provider, providerData: providerData.accessToken })">
+        <img class="social-button" ng-src="/modules/users/client/img/buttons/{{::provider}}Adwords.png">
       </a>
-      <button class="btn btn-danger btn-add-remove-account" ng-click="vm.removeUserAccount(providerName)">
+      <button class="btn btn-danger btn-add-remove-account" ng-click="vm.removeUserAccount(provider)">
         <i class="glyphicon glyphicon-trash"></i>
       </button>
     </div>

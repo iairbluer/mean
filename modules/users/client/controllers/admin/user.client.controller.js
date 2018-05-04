@@ -5,22 +5,30 @@
     .module('users.admin')
     .controller('UserController', UserController);
 
-  UserController.$inject = ['$scope', '$state', '$window', 'Authentication', 'userResolve', 'Notification'];
+  UserController.$inject = ['$scope', '$state', '$window', 'Authentication', 'userResolve', 'Notification', 'AccountsService', 'AdminService'];
 
-  function UserController($scope, $state, $window, Authentication, user, Notification) {
+  function UserController($scope, $state, $window, Authentication, user, Notification, AccountsService, AdminService) {
     var vm = this;
-
     vm.authentication = Authentication;
+    AdminService.query(function (data){
+      vm.users = data;
+    })
     vm.user = user;
+    console.log('USER = ' + JSON.stringify(vm.user));
+    AccountsService.query(function (data){
+      console.log('RECEIVED DATA = ' + JSON.stringify(data));
+      vm.accounts = data;
+    });
     vm.remove = remove;
     vm.update = update;
     vm.isContextUserSelf = isContextUserSelf;
 
     function remove(user) {
+      console.log('USER = ' + JSON.stringify(user));
+      console.log('VM USERS = ' + JSON.stringify(vm.users));
       if ($window.confirm('Are you sure you want to delete this user?')) {
         if (user) {
           user.$remove();
-
           vm.users.splice(vm.users.indexOf(user), 1);
           Notification.success('User deleted successfully!');
         } else {

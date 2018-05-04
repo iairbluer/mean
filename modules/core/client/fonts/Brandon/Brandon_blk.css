@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Brandon_blk';
+    src: url('../fonts/Brandon_blk.eot');
+    src: url('../fonts/Brandon_blk.eot') format('embedded-opentype'),
+         url('../fonts/Brandon_blk.woff2') format('woff2'),
+         url('../fonts/Brandon_blk.woff') format('woff'),
+         url('../fonts/Brandon_blk.ttf') format('truetype'),
+         url('../fonts/Brandon_blk.svg#Brandon_blk') format('svg');
+}

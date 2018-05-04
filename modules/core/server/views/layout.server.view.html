@@ -40,12 +40,14 @@
 
 <body class="ng-cloak">
   <header ng-include="'/modules/core/client/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>
-  <section class="content">
-    <section class="container">
-      {{{block "content"}}}
+  <main class="main-content">
+    <aside style="float:left;" ng-include="'/modules/core/client/views/sidebar.client.view.html'"></aside>
+    <section class="content" style="background:white;">
+      <section class="container">
+        {{{block "content"}}}
+      </section>
     </section>
-  </section>
-
+  </main>
   <noscript>
     <style>
       [ng\:cloak], [ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {

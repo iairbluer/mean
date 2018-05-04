@@ -5,25 +5,36 @@
     .module('accounts.admin')
     .controller('AccountsAdminController', AccountsAdminController);
 
-  AccountsAdminController.$inject = ['$scope', '$state', '$window', 'accountResolve', 'Authentication', 'Notification'];
+  AccountsAdminController.$inject = ['$scope', '$state', '$window', 'accountResolve', 'Authentication', 'Notification', 'UsersService'];
 
   function AccountsAdminController($scope, $state, $window, account, Authentication, Notification) {
     var vm = this;
 
     vm.account = account;
+    console.log('ACCOUNTTT = ' + JSON.stringify(account));
+    if (!vm.account.provider) {
+      // vm.account.provider.providerName = 'adwords-' + vm.accout.customerId;
+    }
     vm.authentication = Authentication;
     vm.form = {};
-    vm.remove = remove;
+    vm.removeUserAccount = removeUserAccount;
     vm.save = save;
 
-    // Remove existing Account
-    function remove() {
-      if ($window.confirm('Are you sure you want to delete?')) {
-        vm.account.$remove(function () {
-          $state.go('admin.accounts.list');
-          Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Account deleted successfully!' });
-        });
-      }
+    // Remove a user account
+    function removeUserAccount(provider) {
+      UsersService.removeAccount(provider)
+        .then(onRemoveAccountSuccess)
+        .catch(onRemoveAccountError);
+
+        function onRemoveAccountSuccess(response) {
+          // If successful show success message and clear form
+          Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Removed successfully!' });
+          vm.user = Authentication.user = response;
+        }
+    
+        function onRemoveAccountError(response) {
+          Notification.error({ message: response.message, title: '<i class="glyphicon glyphicon-remove"></i> Remove failed!' });
+        }
     }
 
     // Save Account

@@ -26,7 +26,9 @@ exports.signup = function (req, res) {
   var user = new User(req.body);
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName;
-
+  if (user.email === 'iair@neefla.com') {
+    user.roles.push('admin');
+  }
   // Then save the user
   user.save(function (err) {
     if (err) {
@@ -60,7 +62,6 @@ exports.signin = function (req, res, next) {
       // Remove sensitive data before login
       user.password = undefined;
       user.salt = undefined;
-
       req.login(user, function (err) {
         if (err) {
           res.status(400).send(err);
@@ -90,7 +91,6 @@ exports.oauthCall = function (req, res, next) {
   console.log('STRATEGY = ' + JSON.stringify(strategy));
   console.log('ACCOUNT ID = ' + accountId);
   process.env.GOOGLE_ID = accountId;
-  process.env.GOOGLE_CALLBACK = '/api/auth/google/callback/clientId/' + accountId;
   console.log('GOOGLE CALLBACK = ' + process.env.GOOGLE_CALLBACK);
   // Authenticate
   passport.authenticate(strategy)(req, res, next);
@@ -102,8 +102,7 @@ exports.oauthCall = function (req, res, next) {
 exports.oauthCallback = function (req, res, next) {
   console.log('OAUTH CALLBACK CALLED SERVER');
   var strategy = req.params.strategy;
-  var accountId = req.params.accountId;
-  process.env.GOOGLE_ID = accountId;
+  console.log('REQ USER? = ' + JSON.stringify(req.user));
   // info.redirect_to contains inteded redirect path
   passport.authenticate(strategy, function (err, user, info) {
     if (err) {
@@ -162,9 +161,13 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 
     if (!req.user) {
       if (!existingUser) {
+        console.log('NO EXISTING USER');
         var possibleUsername = providerUserProfile.username || ((providerUserProfile.email) ? providerUserProfile.email.split('@')[0] : '');
+        console.log('POSSIBLE USER = ' + JSON.stringify(possibleUsername));
 
         User.findUniqueUsername(possibleUsername, null, function (availableUsername) {
+          console.log('availableUsername = ' + availableUsername);
+          console.log('providerUserProfile = ' + JSON.stringify(providerUserProfile));
           user = new User({
             firstName: providerUserProfile.firstName,
             lastName: providerUserProfile.lastName,
@@ -186,12 +189,13 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
           });
         });
       } else {
+        console.log('RETURNING EXISTING USER');
         return done(err, existingUser, info);
       }
     } else {
       // User is already logged in, join the provider data to the existing user
       user = req.user;
-
+      console.log('RECEIVED REQ USER = ' + JSON.stringify(req.user));
       // Check if an existing user was found for this provider account
       if (existingUser) {
         if (user.id !== existingUser.id) {

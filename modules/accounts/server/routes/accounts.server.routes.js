@@ -19,5 +19,7 @@ module.exports = function (app) {
     .delete(accounts.delete);
 
   // Finish by binding the account middleware
-  app.param('accountId', accounts.accountByID);
+  // app.param('accountId', accounts.accountByID);
+  app.param('customerId', accounts.accountByCustomerID);
+
 };

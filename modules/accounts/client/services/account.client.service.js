@@ -8,8 +8,8 @@
     AccountsService.$inject = ['$resource', '$log'];
 
   function AccountsService($resource, $log) {
-    var Account = $resource('/api/accounts/:accountId', {
-      accountId: '@_id',
+    var Account = $resource('/api/accounts/:customerId', {
+      customerId: '@customerId',
     }, {
       update: {
         method: 'PUT'

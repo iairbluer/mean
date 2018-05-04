@@ -28,6 +28,26 @@
             </div>
           </div>
         </div>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="accounts">Authorized Accounts</label>
+          <div class="controls">
+            <input id="accounts" type="text" name="accounts" ng-model="vm.user.accounts" class="form-control" ng-list required>
+              <div ng-messages="vm.userForm.accounts.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">At least one accounts is required.</p>
+              </div>
+              <div ng-repeat="accounts in vm.accounts">
+                <div class="action-checkbox">
+                  <input id="{{account.customerId}}" type="checkbox" value="{{account._id}}" ng-checked="vm.selection.indexOf({ customerName: account.customerName }) > -1" ng-click="toggleSelection(account)" />
+                  <label for="{{account.customerName}}"></label>
+                  {{ account }}
+                </div>
+              </div>
+              <!-- <input class="form-control" type="text" name="accounts" ng-model="vm.user.accounts" id="accounts" ng-list required /> -->
+              <!-- <div ng-messages="vm.userForm.accounts.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">At least one role is required.</p>
+              </div> -->
+            </div>
+          </div>
         <div class="form-group">
           <input type="submit" value="Update" class="btn btn-default">
         </div>

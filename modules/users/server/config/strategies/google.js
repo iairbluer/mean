@@ -27,6 +27,8 @@ module.exports = function (config) {
   },
     function (req, accessToken, refreshToken, profile, done) {
       console.log('IN CALLBACK');
+      console.log('REQ USER? = ' + JSON.stringify(req.user));
+      console.log('PROFILE = ' + JSON.stringify(profile));
       // Set the provider data and include tokens
       var providerData = profile._json;
       providerData.accessToken = accessToken;
@@ -40,7 +42,7 @@ module.exports = function (config) {
         email: profile.emails[0].value,
         username: profile.username,
         profileImageURL: (providerData.picture) ? providerData.picture : undefined,
-        provider: 'google',
+        provider: 'adwords',
         providerIdentifierField: 'id',
         providerData: providerData
       };

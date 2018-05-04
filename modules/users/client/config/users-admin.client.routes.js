@@ -44,6 +44,7 @@
     getUser.$inject = ['$stateParams', 'AdminService'];
 
     function getUser($stateParams, AdminService) {
+      console.log('TRYING TO GET USER');
       return AdminService.get({
         userId: $stateParams.userId
       }).$promise;

@@ -1,0 +1,30 @@
+<section>
+        <div class="page-header">
+          <h1 ng-bind="vm.account.customerName"></h1>
+          <h3>Status: {{ vm.account.status }}</h3>
+          <!-- <div style="top:0;" class="pull-right"> -->
+              <a class="btn btn-primary pull-right" ui-sref="admin.accounts.edit({accountId: vm.account._id})">
+                <i class="glyphicon glyphicon-edit"></i>
+              </a>
+              <a class="btn btn-primary pull-right" ng-click="vm.remove()">
+                <i class="glyphicon glyphicon-trash"></i>
+              </a>
+          <!-- </div> -->
+        </div>
+        <small>
+          <em class="text-muted">
+            Account Customer id
+            <span ng-bind="vm.account.customerId"></span><br>
+            Account Added on
+            <span ng-bind="vm.account.created | date:'mediumDate'"></span><br>
+            by
+            <span ng-if="vm.account.user" ng-bind="vm.account.user.username"></span>
+            <span ng-if="!vm.account.user">Deleted User</span>
+            <br>
+          </em>
+      
+        </small>
+        <h2></h2>
+        <p class="lead"> {{ vm.account.provider }}</p>
+      </section>
+      

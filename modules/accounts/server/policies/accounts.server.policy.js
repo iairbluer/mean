@@ -18,7 +18,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/accounts',
       permissions: '*'
     }, {
-      resources: '/api/accounts/:userId/:accountId',
+      resources: '/api/accounts/:customerId',
       permissions: '*'
     }]
   }, {
@@ -37,7 +37,7 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
   // If an account is being processed and the current user created it then allow any manipulation
-  if (req.account && req.user && req.account.user && req.account.user.id === req.user.id) {
+  if (req.account && req.user && req.account.user && req.account.user.id === req.user.id || req.user.roles.indexOf('admin') > -1) {
     return next();
   }
 

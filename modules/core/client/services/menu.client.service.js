@@ -125,6 +125,9 @@
       addMenu('topbar', {
         roles: ['*']
       });
+      addMenu('sidebar', {
+        roles: ['*']
+      });
     }
 
     // Remove existing menu object by menu id

@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Brandon_med';
+    src: url('../fonts/Brandon_med.eot');
+    src: url('../fonts/Brandon_med.eot') format('embedded-opentype'),
+         url('../fonts/Brandon_med.woff2') format('woff2'),
+         url('../fonts/Brandon_med.woff') format('woff'),
+         url('../fonts/Brandon_med.ttf') format('truetype'),
+         url('../fonts/Brandon_med.svg#Brandon_med') format('svg');
+}

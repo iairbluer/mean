@@ -1,0 +1,33 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.campaign._id ? 'Edit Campaign' : 'New Campaign'}}</h1>
+  </div>
+  <div class="pull-right">
+    <a ng-show="vm.campaign._id" class="btn btn-primary" ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.campaignForm" class="form-horizontal" ng-submit="vm.save(vm.form.campaignForm.$valid)" novalidate>
+        <fieldset>
+            <div class="form-group" show-errors>
+              <label for="campaignId">Campaign Id</label>
+              <input type="text" id="campaignId"  name="campaignId" class="form-control " ng-model="vm.campaign.campaignId" placeholder="e.g. ????" required autofocus />
+              <div ng-messages="vm.form.campaignForm.campaignId.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">campaign id is required.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label for="campaignName">Campaign Name</label>
+              <input type="text" id="campaignName" name="campaignName" class="form-control" ng-model="vm.campaign.campaignName" placeholder="campaign Name" required autofocus>
+              <div ng-messages="vm.form.campaignForm.campaignName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">campaign name is required.</p>
+              </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-default">{{vm.campaign._id ? 'Update' : 'Create'}}</button>
+            </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

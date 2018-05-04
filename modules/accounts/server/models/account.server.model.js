@@ -37,15 +37,13 @@ var AccountSchema = new Schema({
     enum:['CONNECTED','DISCONNECTED', 'PROCESSING'], 
     default: 'DISCONNECTED'},
   provider: {
-    providerName: {
-      type: String,
-      trim: true,
-      default: ''
-    },
-    providerData: {
-      type: Object,
-      defult: null
-    }
+    type: String,
+    trim: true,
+    default: ''
+  },
+  providerData: {
+    type: Object,
+    defult: null
   }
 });
 

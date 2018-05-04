@@ -19,7 +19,7 @@
     vm.refreshDisconnectedAccounts();
     function refreshDisconnectedAccounts() {
       vm.disconnectedAccounts = [];
-      for (var accountIndex = 0;  accountIndex < vm.accounts.length; accountIndex++) {
+      for (var accountIndex = 0; accountIndex < vm.accounts.length; accountIndex++) {
         if (vm.accounts[accountIndex].status === 'DISCONNECTED')
           vm.disconnectedAccounts.push(vm.accounts[accountIndex]);
       }
@@ -31,8 +31,9 @@
     // Connect Account Function
     function connectAccount(account) {
       var accountToConnect = account;
+      console.log('ACCOUNT TO CONNECT = ' + JSON.stringify(accountToConnect));
       // PREPARE FOR OAUTH CALL
-      var url = '/api/auth/google/clientId/' + accountToConnect._id;
+      var url = '/api/auth/google/clientId/' + accountToConnect.customerId;
       // var indexToSplice = vm.accounts
       // MAKING OAUTH CALL
       vm.callOauthProvider(url);
@@ -57,10 +58,12 @@
     }
 
     // Remove a user account
-    function removeUserAccount(provider) {
-      UsersService.removeAccount(provider)
-        .then(onRemoveAccountSuccess)
-        .catch(onRemoveAccountError);
+    function removeUserAccount(account) {
+      console.log('ACCOUNT = ' + JSON.stringify(account));
+      // TO DO - FIND OUT IF WE HAVE A USER CONTEXT AND GET PROVIDER OR FROM ACCOUNT ITSELF
+      // UsersService.removeAccount(provider)
+      //   .then(onRemoveAccountSuccess)
+      //   .catch(onRemoveAccountError);
     }
 
     function onRemoveAccountSuccess(response) {
@@ -72,7 +75,6 @@
     function onRemoveAccountError(response) {
       Notification.error({ message: response.message, title: '<i class="glyphicon glyphicon-remove"></i> Remove failed!' });
     }
-    
     // function save() {
     //   // Create a new article, or update the current instance
     //   vm.account.createOrUpdate()
@@ -97,6 +99,5 @@
       // Effectively call OAuth authentication route:
       $window.location.href = url;
     }
-    
   }
 }());
