@@ -10,10 +10,18 @@
   function UserController($scope, $state, $window, Authentication, user, Notification, AccountsService, AdminService) {
     var vm = this;
     vm.authentication = Authentication;
+    vm.user = user;
+    vm.selection = [];
     AdminService.query(function (data){
       vm.users = data;
-    })
-    vm.user = user;
+      if (vm.users.accounts && vm.user.accounts.length) {
+        console.log('ADDING USER ACCOUNTS TO SELECTION');
+        for (var accountIndex = 0; accountIndex < vm.users[userIndex].accounts.length; accountIndex ++) {
+          vm.selection.push(vm.users[userIndex].accounts[accountIndex]);
+        }
+      }
+      
+    });
     console.log('USER = ' + JSON.stringify(vm.user));
     AccountsService.query(function (data){
       console.log('RECEIVED DATA = ' + JSON.stringify(data));
@@ -22,7 +30,45 @@
     vm.remove = remove;
     vm.update = update;
     vm.isContextUserSelf = isContextUserSelf;
-
+    
+    vm.toggleSelection = toggleSelection;
+    function toggleSelection(account) {
+      var customerName = account.customerName;
+      var accountId = account._id;
+      var isFound = false;
+      var selectedIndex;
+      console.log('SELECTION = ' + JSON.stringify(vm.selection));
+      // var idx = $scope.selection.indexOf(brandName);
+      for (selectedIndex = 0; selectedIndex < vm.selection.length && !isFound; selectedIndex++) {
+        if (vm.selection[selectedIndex] === accountId) {
+          // is currently selected
+          isFound = true;
+          vm.selection.splice(selectedIndex, 1);
+        }
+      }
+      if (isFound) {
+        console.log('CALLING UPDATE AUTH BRANDS AFTER SPLICE');
+        updateAuthAccounts();
+      } else {
+        // is newly selected
+        vm.selection.push(accountId);
+        console.log('CALLING UPDATE AUTH BRANDS AFTER PUSH');
+        updateAuthAccounts();
+      }
+      function updateAuthAccounts() {
+        console.log('UPDATE AUTH Accounts = ' + JSON.stringify(vm.selection));
+        vm.user.accounts = null;
+        if (vm.selection.length > 0) {
+          vm.user.accounts = [];
+          for (var accountIndex = 0; accountIndex < vm.selection.length; accountIndex++) {
+            vm.user.accounts.push(vm.selection[accountIndex]);
+          } 
+        } else {
+          console.log('NO Accounts SELECTED');
+        }
+        console.log('POPULATED AUTH Accounts');
+      }
+    };
     function remove(user) {
       console.log('USER = ' + JSON.stringify(user));
       console.log('VM USERS = ' + JSON.stringify(vm.users));

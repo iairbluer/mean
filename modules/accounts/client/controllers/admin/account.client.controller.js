@@ -7,14 +7,10 @@
 
   AccountsAdminController.$inject = ['$scope', '$state', '$window', 'accountResolve', 'Authentication', 'Notification', 'UsersService'];
 
-  function AccountsAdminController($scope, $state, $window, account, Authentication, Notification) {
+  function AccountsAdminController($scope, $state, $window, account, Authentication, Notification, UsersService) {
     var vm = this;
-
     vm.account = account;
     console.log('ACCOUNTTT = ' + JSON.stringify(account));
-    if (!vm.account.provider) {
-      // vm.account.provider.providerName = 'adwords-' + vm.accout.customerId;
-    }
     vm.authentication = Authentication;
     vm.form = {};
     vm.removeUserAccount = removeUserAccount;

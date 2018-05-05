@@ -13,6 +13,8 @@ var path = require('path'),
  */
 exports.create = function (req, res) {
   var account = new Account(req.body);
+  console.log('ACCOUNT IN CREATE = ' + JSON.stringify(account));
+
   account.user = req.user._id;
 
   account.save(function (err) {
@@ -35,7 +37,7 @@ exports.read = function (req, res) {
 
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  account.isCurrentUserOwner = !!(req.user && account.user && account.user._id.toString() === req.user._id.toString() || req.user.roles.indexOf('admin') > -1);
+  account.isCurrentUserOwner = !!(req.user && account.user && account.user._id.toString() === req.user._id.toString());
 
   res.json(account);
 };
@@ -80,42 +82,57 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
   console.log('LIST ACCOUNTS');
-  Account.find({
-    // userId: {$in: req.user._id }
-  }).sort('-created').populate('user', 'username').exec(function (err, accounts) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(accounts);
-    }
-  });
+  var roles = JSON.stringify(req.user.roles)
+  if(roles.includes('admin')){
+    console.log('LIST ACCOUNTS ADMIN');
+    Account.find().sort('-created').exec(function (err, accounts) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(accounts);
+      }
+    });
+  } else {
+    console.log('LIST ACCOUNTS USER');
+    Account.find({
+      customerId: {$in: req.user.accounts}
+    }).sort('-created').exec(function (err, accounts) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(accounts);
+      }
+    });
+  }
 };
 
 /**
  * Account middleware
  */
-// exports.accountByID = function (req, res, next, id) {
+exports.accountByID = function (req, res, next, id) {
 
-//   if (!mongoose.Types.ObjectId.isValid(id)) {
-//     return res.status(400).send({
-//       message: 'Account is invalid'
-//     });
-//   }
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'Account is invalid'
+    });
+  }
 
-//   Account.findById(id).populate('user', 'username').exec(function (err, account) {
-//     if (err) {
-//       return next(err);
-//     } else if (!account) {
-//       return res.status(404).send({
-//         message: 'No account with that identifier has been found'
-//       });
-//     }
-//     req.account = account;
-//     next();
-//   });
-// };
+  Account.findById(id).populate('user', 'username').exec(function (err, account) {
+    if (err) {
+      return next(err);
+    } else if (!account) {
+      return res.status(404).send({
+        message: 'No account with that identifier (ACCOUNT ID) has been found'
+      });
+    }
+    req.account = account;
+    next();
+  });
+};
 
 /**
  * Account middleware
@@ -133,7 +150,7 @@ exports.accountByCustomerID = function (req, res, next, id) {
       return next(err);
     } else if (!account) {
       return res.status(404).send({
-        message: 'No account with that identifier has been found'
+        message: 'No account with that identifier (CUSTOMER ID) has been found'
       });
     }
     req.account = account;

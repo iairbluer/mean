@@ -28,7 +28,8 @@ exports.update = function (req, res) {
   user.lastName = req.body.lastName;
   user.displayName = user.firstName + ' ' + user.lastName;
   user.roles = req.body.roles;
-
+  console.log('ACCOUNTS = ' + JSON.stringify(req.body.accounts));
+  user.accounts = req.body.accounts;
   user.save(function (err) {
     if (err) {
       return res.status(422).send({
@@ -107,7 +108,7 @@ exports.userByID = function (req, res, next, id) {
     });
   }
 
-  User.findById(id, '-salt -password -providerData').exec(function (err, user) {
+  User.findById(id, '-salt -password -providerData').populate('user.accounts').exec(function (err, user) {
     if (err) {
       return next(err);
     } else if (!user) {

@@ -13,7 +13,7 @@ module.exports = function (app) {
     .post(campaigns.create);
 
   // Single account routes
-  app.route('/api/accounts/:campaignId').all(campaignsPolicy.isAllowed)
+  app.route('/api/campaigns/:campaignId').all(campaignsPolicy.isAllowed)
     .get(campaigns.read)
     .put(campaigns.update)
     .delete(campaigns.delete);

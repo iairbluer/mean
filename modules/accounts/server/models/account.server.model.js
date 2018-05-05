@@ -17,6 +17,10 @@ var AccountSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  connected: {
+    type: Date,
+    default: null
+  },
   customerName: {
     type: String,
     default: '',
@@ -26,16 +30,27 @@ var AccountSchema = new Schema({
   customerId: {
     type: String,
     default: '',
-    trim: true
+    trim: true,
+    required: 'Customer ID cannot be blank'
+
   },
   user: {
     type: Schema.ObjectId,
     ref: 'User'
   },
+  authenticatedUsers: {
+    type: [Schema.ObjectId],
+    ref: 'User'
+  },
+  connectedUsers: {
+    type: [Schema.ObjectId],
+    ref: 'User'
+  },
   status: { 
     type: String, 
     enum:['CONNECTED','DISCONNECTED', 'PROCESSING'], 
-    default: 'DISCONNECTED'},
+    default: 'DISCONNECTED'
+  },
   provider: {
     type: String,
     trim: true,
@@ -47,7 +62,7 @@ var AccountSchema = new Schema({
   }
 });
 
-AccountSchema.statics.seed = seed;
+// AccountSchema.statics.seed = seed;
 
 mongoose.model('Account', AccountSchema);
 
@@ -55,97 +70,97 @@ mongoose.model('Account', AccountSchema);
 * Seeds the User collection with document (Article)
 * and provided options.
 */
-function seed(doc, options) {
-  var Account = mongoose.model('Account');
+// function seed(doc, options) {
+//   var Account = mongoose.model('Account');
 
-  return new Promise(function (resolve, reject) {
+//   return new Promise(function (resolve, reject) {
 
-    skipDocument()
-      .then(findAdminUser)
-      .then(add)
-      .then(function (response) {
-        return resolve(response);
-      })
-      .catch(function (err) {
-        return reject(err);
-      });
+//     skipDocument()
+//       .then(findAdminUser)
+//       .then(add)
+//       .then(function (response) {
+//         return resolve(response);
+//       })
+//       .catch(function (err) {
+//         return reject(err);
+//       });
 
-    function findAdminUser(skip) {
-      var User = mongoose.model('User');
+//     function findAdminUser(skip) {
+//       var User = mongoose.model('User');
 
-      return new Promise(function (resolve, reject) {
-        if (skip) {
-          return resolve(true);
-        }
+//       return new Promise(function (resolve, reject) {
+//         if (skip) {
+//           return resolve(true);
+//         }
 
-        User
-          .findOne({
-            roles: { $in: ['admin'] }
-          })
-          .exec(function (err, admin) {
-            if (err) {
-              return reject(err);
-            }
+//         User
+//           .findOne({
+//             roles: { $in: ['admin'] }
+//           })
+//           .exec(function (err, admin) {
+//             if (err) {
+//               return reject(err);
+//             }
 
-            doc.user = admin;
+//             doc.user = admin;
 
-            return resolve();
-          });
-      });
-    }
+//             return resolve();
+//           });
+//       });
+//     }
 
-    function skipDocument() {
-      return new Promise(function (resolve, reject) {
-        Account
-          .findOne({
-            customerId: doc.customerId
-          })
-          .exec(function (err, existing) {
-            if (err) {
-              return reject(err);
-            }
+//     function skipDocument() {
+//       return new Promise(function (resolve, reject) {
+//         Account
+//           .findOne({
+//             customerId: doc.customerId
+//           })
+//           .exec(function (err, existing) {
+//             if (err) {
+//               return reject(err);
+//             }
 
-            if (!existing) {
-              return resolve(false);
-            }
+//             if (!existing) {
+//               return resolve(false);
+//             }
 
-            if (existing && !options.overwrite) {
-              return resolve(true);
-            }
+//             if (existing && !options.overwrite) {
+//               return resolve(true);
+//             }
 
-            // Remove Account (overwrite)
+//             // Remove Account (overwrite)
 
-            existing.remove(function (err) {
-              if (err) {
-                return reject(err);
-              }
+//             existing.remove(function (err) {
+//               if (err) {
+//                 return reject(err);
+//               }
 
-              return resolve(false);
-            });
-          });
-      });
-    }
+//               return resolve(false);
+//             });
+//           });
+//       });
+//     }
 
-    function add(skip) {
-      return new Promise(function (resolve, reject) {
-        if (skip) {
-          return resolve({
-            message: chalk.yellow('Database Seeding: Account\t' + doc.customerId + ' skipped')
-          });
-        }
+//     function add(skip) {
+//       return new Promise(function (resolve, reject) {
+//         if (skip) {
+//           return resolve({
+//             message: chalk.yellow('Database Seeding: Account\t' + doc.customerId + ' skipped')
+//           });
+//         }
 
-        var account = new Account(doc);
+//         var account = new Account(doc);
 
-        account.save(function (err) {
-          if (err) {
-            return reject(err);
-          }
+//         account.save(function (err) {
+//           if (err) {
+//             return reject(err);
+//           }
 
-          return resolve({
-            message: 'Database Seeding: Account\t' + account.customerId + ' added'
-          });
-        });
-      });
-    }
-  });
-}
+//           return resolve({
+//             message: 'Database Seeding: Account\t' + account.customerId + ' added'
+//           });
+//         });
+//       });
+//     }
+//   });
+// }

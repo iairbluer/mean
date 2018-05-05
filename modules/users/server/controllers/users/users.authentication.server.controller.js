@@ -87,11 +87,10 @@ exports.signout = function (req, res) {
 exports.oauthCall = function (req, res, next) {
   console.log('OAUTH CALLED SERVER');
   var strategy = req.params.strategy;
-  var accountId = req.params.accountId;
+  var customerId = req.params.customerId;
   console.log('STRATEGY = ' + JSON.stringify(strategy));
-  console.log('ACCOUNT ID = ' + accountId);
-  process.env.GOOGLE_ID = accountId;
-  console.log('GOOGLE CALLBACK = ' + process.env.GOOGLE_CALLBACK);
+  console.log('ACCOUNT ID = ' + customerId);
+  process.env.GOOGLE_ID = customerId;
   // Authenticate
   passport.authenticate(strategy)(req, res, next);
 };
@@ -100,9 +99,18 @@ exports.oauthCall = function (req, res, next) {
  * OAuth callback
  */
 exports.oauthCallback = function (req, res, next) {
-  console.log('OAUTH CALLBACK CALLED SERVER');
   var strategy = req.params.strategy;
-  console.log('REQ USER? = ' + JSON.stringify(req.user));
+  console.log('OAUTH CALLBACK CALLED SERVER WITH STRATEGY - ' + strategy);
+  if (process.env.GOOGLE_ID) {
+    console.log('WHAT DO YOU KNOW...IT WORKED');
+  } else {
+    console.log('AS I THOUGHT...');
+    if (req.params.customerId) {
+      process.env.GOOGLE_ID = req.params.customerId;
+    }
+  }
+  
+  console.log('BEFORE AUTHENTICATE - ' + process.env.GOOGLE_ID);
   // info.redirect_to contains inteded redirect path
   passport.authenticate(strategy, function (err, user, info) {
     if (err) {
@@ -111,7 +119,29 @@ exports.oauthCallback = function (req, res, next) {
     if (!user) {
       return res.redirect('/authentication/signin');
     }
-    return res.json(user);
+    console.log('USER HERE - ' + JSON.stringify(user));
+    console.log('INFO? = ' + JSON.stringify(info));
+    Account.find({ 
+      customerId: {$in: req.params.customerId}
+    }).exec(function (err, account) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        console.log('FOUND ACCOUNT');
+        account.status = 'CONNECTED';
+        account.createOrUpdate();
+        var io = require('../sockets/accounts.server.socket.config').IO
+        if(io){
+          io.to('admin').emit("accountConnected", account._id);
+          console.log("sending account customer id to room: "+ account._id)
+          io.to(account_id).emit("accountConnected", account._id);
+        }
+      }
+    });
+    req.params.customerId = undefined;
+    return res.redirect(info.redirect_to || '/settings/accounts');
     // req.login(user, function (err) {
     //   if (err) {
     //     return res.redirect('/authentication/signin');
@@ -195,7 +225,6 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
     } else {
       // User is already logged in, join the provider data to the existing user
       user = req.user;
-      console.log('RECEIVED REQ USER = ' + JSON.stringify(req.user));
       // Check if an existing user was found for this provider account
       if (existingUser) {
         if (user.id !== existingUser.id) {
@@ -209,12 +238,11 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
       if (!user.additionalProvidersData) {
         user.additionalProvidersData = {};
       }
-
+  
       user.additionalProvidersData[providerUserProfile.provider] = providerUserProfile.providerData;
 
       // Then tell mongoose that we've updated the additionalProvidersData field
       user.markModified('additionalProvidersData');
-
       // And save the user
       user.save(function (err) {
         return done(err, user, info);

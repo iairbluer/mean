@@ -20,7 +20,7 @@ module.exports = function (app) {
   app.route('/api/auth/signout').get(users.signout);
 
   // Setting the oauth routes
-  app.route('/api/auth/:strategy/clientId/:accountId').get(users.oauthCall);
+  app.route('/api/auth/:strategy/clientId/:customerId').get(users.oauthCall);
   app.route('/api/auth/:strategy/callback').get(users.oauthCallback);
 
 };

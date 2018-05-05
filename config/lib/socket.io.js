@@ -10,6 +10,8 @@ var config = require('../config'),
   passport = require('passport'),
   socketio = require('socket.io'),
   session = require('express-session'),
+  mongoose = require('mongoose'),
+  User = mongoose.model('User'),
   MongoStore = require('connect-mongo')(session);
 
 // Define the Socket.io configuration method
@@ -108,10 +110,31 @@ module.exports = function (app, db) {
 
   // Add an event listener to the 'connection' event
   io.on('connection', function (socket) {
+    User.findById(socket.request.session.passport.user, function(err,user){
+      if(err) console.log(err)
+      else{
+        console.log("found user: "+user)
+        if(!user) console.log(err)
+        else{
+          if(user.roles.includes('admin')){
+            console.log("user is admin")
+            socket.join("admin")
+          }
+          else{
+            var additionalProviderData = Object.keys(user.additionalProviderData);
+            for(var i = 0; i < additionalProviderData.length; i++){
+              console.log("joining user to room: "+user.additionalProviderData[i])
+              socket.join(user.additionalProviderData[i])
+            }
+          }
+        }
+      }
+    });
     config.files.server.sockets.forEach(function (socketConfiguration) {
       require(path.resolve(socketConfiguration))(io, socket);
     });
   });
+
 
   return server;
 };

@@ -20,8 +20,8 @@ module.exports = function (config) {
     callbackURL: process.env.GOOGLE_CALLBACK || config.google.callbackURL,
     passReqToCallback: true,
     scope: [
-      // 'https://www.googleapis.com/auth/userinfo.profile',
-      // 'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/adwords'
     ]
   },
@@ -42,7 +42,7 @@ module.exports = function (config) {
         email: profile.emails[0].value,
         username: profile.username,
         profileImageURL: (providerData.picture) ? providerData.picture : undefined,
-        provider: 'adwords',
+        provider: process.env.GOOGLE_ID,
         providerIdentifierField: 'id',
         providerData: providerData
       };

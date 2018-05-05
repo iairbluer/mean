@@ -8,7 +8,8 @@
     AccountsService.$inject = ['$resource', '$log'];
 
   function AccountsService($resource, $log) {
-    var Account = $resource('/api/accounts/:customerId', {
+    var Account = $resource('/api/accounts/:accountId/:customerId', {
+      accountId: '@_id',
       customerId: '@customerId',
     }, {
       update: {
@@ -34,11 +35,13 @@
 
       // Handle successful response
       function onSuccess(account) {
+        console.log('SUCCESS SAVE ACCOUNT');
         // Any required internal processing from inside the service, goes here.
       }
 
       // Handle error response
       function onError(errorResponse) {
+        console.log('ERROR ON ACCOUNT SAVE');
         var error = errorResponse.data;
         // Handle error internally
         handleError(error);

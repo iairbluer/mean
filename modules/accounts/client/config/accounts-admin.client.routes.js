@@ -24,7 +24,7 @@
         }
       })
       .state('admin.account', {
-        url: '/account/:customerId',
+        url: '/account/:accountId',
         templateUrl: '/modules/accounts/client/views/admin/view-account.client.view.html',
         controller: 'AccountsAdminController',
         controllerAs: 'vm',
@@ -66,7 +66,7 @@
 
   function getAccount($stateParams, AccountsService) {
     return AccountsService.get({
-      customerId: $stateParams.customerId,
+      accountId: $stateParams.accountId,
     }).$promise;
   }
 
