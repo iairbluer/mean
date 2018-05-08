@@ -5,9 +5,9 @@
     .module('accounts.admin')
     .controller('AccountsAdminController', AccountsAdminController);
 
-  AccountsAdminController.$inject = ['$scope', '$state', '$window', 'accountResolve', 'Authentication', 'Notification', 'UsersService'];
+  AccountsAdminController.$inject = ['Socket', '$scope', '$state', '$window', 'accountResolve', 'Authentication', 'Notification', 'UsersService', 'AccountsCampaignsService'];
 
-  function AccountsAdminController($scope, $state, $window, account, Authentication, Notification, UsersService) {
+  function AccountsAdminController(Socket, $scope, $state, $window, account, Authentication, Notification, UsersService, AccountsCampaignsService) {
     var vm = this;
     vm.account = account;
     console.log('ACCOUNTTT = ' + JSON.stringify(account));
@@ -15,7 +15,44 @@
     vm.form = {};
     vm.removeUserAccount = removeUserAccount;
     vm.save = save;
+    vm.getCampaignsService = getCampaignsService;
+    init();
 
+    function init() {
+      console.log('AccountsAdminController INIT');
+      if (!vm.authentication.user) {
+        console.log('NO USER DETECTED');
+      } else {
+        console.log('USER = ' + JSON.stringify(vm.authentication.user));
+      }
+      
+      vm.loading = false;
+      // Make sure the Socket is connected
+      if (!Socket.socket) {
+        console.log('NO SOCKET DETECTED - CONNECTING');
+        Socket.connect();
+      }
+
+      // Add an event listener to the 'chatMessage' event
+      Socket.on('connectedAccount', function (account) {
+        console.log('THUMBNAIL = ' + JSON.stringify(thumbnail));
+        // vm.thumbnails.push(thumbnail);
+      });
+    
+      // Remove the event listener when the controller instance is destroyed
+      $scope.$on('$destroy', function () {
+        Socket.removeListener('thumbnail');
+      });
+    }
+
+
+    function getCampaignsService() {
+      console.log('CALLING GET CAMPAIGNS SERVICE');
+      AccountsCampaignsService.get({ accountId: vm.account._id }, function(data){
+        console.log('RECEIVED CAMPAIGNS SERVICE ACCOUNT = ' + JSON.stringify(data));
+      })
+      // campaignServices.getCampaignsService(vm.account, vm.authentication.user);
+    }
     // Remove a user account
     function removeUserAccount(provider) {
       UsersService.removeAccount(provider)

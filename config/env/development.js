@@ -66,6 +66,12 @@ module.exports = {
       }
     }
   },
+  adwords: {
+    developerToken: 'HbceEq7f3bLmdMBlpPG1HA', //your adwords developerToken
+    client_id: '478823627931-iprpqo38i3q2sp1t1pbbmhmaumkqe4vs.apps.googleusercontent.com', //this is the api console client_id
+    client_secret: 'jIB7IJIaVikK21dzZyl2x_eR',
+    refresh_token: '4/eb7ksxjp10r8I-ReW5ej7MyGfgr_6EG_zHaDEd9cOWQ'
+  },
   livereload: true,
   seedDB: {
     seed: process.env.MONGO_SEED === 'true',

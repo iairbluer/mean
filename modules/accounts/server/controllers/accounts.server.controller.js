@@ -6,8 +6,9 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Account = mongoose.model('Account'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
-
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  AccountsCampaignsService = require('../services/accounts-campaignservice');
+  var accountsCampaignsService = new AccountsCampaignsService;
 /**
  * Create an account
  */
@@ -74,6 +75,34 @@ exports.delete = function (req, res) {
     } else {
       res.json(account);
     }
+  });
+};
+/**
+ * Get Acounts Campaign Services
+ */
+exports.getCampaignService = function (req, res) {
+  var account = req.account;
+  if (req.user.additionalProviderData && Object.keys(req.user.additionalProviderData)) {
+    console.log('USER HAS CONNECTED ACCOUNTS');
+    if (Object.keys(req.user.additionalProviderData).includes(account.customerId)) {
+      console.log('THE PROVIDER DATA = ' + req.user.additionalProviderData[account.customerId]);
+    }
+  }
+  var user = {
+    developerToken: config.adwords.dveloperToken, //your adwords developerToken
+    userAgent: account.customerName, //any company name
+    clientCustomerId: account.customerId, //the Adwords Account id (e.g. 123-123-123)
+    client_id: config.adwords.client_id, //this is the api console client_id
+    client_secret: config.adwords.client_secret,
+    // refresh_token: req.user.
+  };
+  accountsCampaignsService.getCampaignsService(account, user)
+  .then(function (campaignsService){
+    account.campaignsService = campaignsService;
+    res.json(account);
+  })
+  .catch(function (error){
+    res.json(error);
   });
 };
 

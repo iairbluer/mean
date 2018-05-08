@@ -15,10 +15,8 @@ module.exports = function (io, socket) {
   // When Account Connected Update the Account - by customer id;
   socket.on('accountConnected', function (account) {
     console.log('ACCOUNT CONNECTED - ' + JSON.stringify(account));
-
-
     // Emit the 'chatMessage' event
-    io.emit('chatMessage', message);
+    // io.emit('chatMessage', message);
   });
 
   // Emit the status event when a socket client is disconnected

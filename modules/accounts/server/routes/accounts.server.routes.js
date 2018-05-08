@@ -5,7 +5,7 @@
  */
 var accountsPolicy = require('../policies/accounts.server.policy'),
     accounts = require('../controllers/accounts.server.controller');
-
+   
 module.exports = function (app) {
   // accounts collection routes
   app.route('/api/accounts').all(accountsPolicy.isAllowed)
@@ -17,6 +17,12 @@ module.exports = function (app) {
     .get(accounts.read)
     .put(accounts.update)
     .delete(accounts.delete);
+  
+  app.route('/api/accounts/:accountId/getCampaignsService').all(accountsPolicy.isAllowed)
+    .get(accounts.getCampaignService);
+    // .put(accounts.update)
+    // .delete(accounts.delete);
+  
 
   // Finish by binding the account middleware
   app.param('accountId', accounts.accountByID);
