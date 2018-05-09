@@ -7,8 +7,25 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
-  User = mongoose.model('User');
+  User = mongoose.model('User'),
+  config = require(path.resolve('./config/config')),
+  Account = mongoose.model('Account');
 
+var AdwordsUser = require('node-adwords').AdwordsUser;
+var AdwordsConstants = require('node-adwords').AdwordsConstants;
+var AdwordsReport = require('node-adwords').AdwordsReport;
+//create selector for campaigns Services
+var selector = {
+  fields: ['Id', 'Name', 'Status'],
+  ordering: [{
+      field: 'Name',
+      sortOrder: 'ASCENDING'
+  }],
+  paging: {
+      startIndex: 0,
+      numberResults: AdwordsConstants.RECOMMENDED_PAGE_SIZE
+  }
+};
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
   '/authentication/signin',
@@ -119,35 +136,53 @@ exports.oauthCallback = function (req, res, next) {
     if (!user) {
       return res.redirect('/authentication/signin');
     }
-    console.log('USER HERE - ' + JSON.stringify(user));
-    console.log('INFO? = ' + JSON.stringify(info));
-    Account.find({ 
-      customerId: {$in: req.params.customerId}
-    }).exec(function (err, account) {
-      if (err) {
-        return res.status(422).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+    if (!process.env.GOOGLE_ID && !req.params.customerId) {
+      console.log('COULDNT FIND PARAM CUSTOMER ID');
+    } else {
+      console.log('FOUND GOOGLE ID = ' + process.env.GOOGLE_ID);
+      console.log('FOUND CUSTOMER ID = ' + req.params.customerId);
+      var customerId;
+      if (process.env.GOOGLE_ID) {
+        customerId = process.env.GOOGLE_ID;
+        process.env.GOOGLE_ID = undefined;
+      } else if (req.params.customerId) {
+        customerId = req.params.customerId;
+        req.params.customerId = undefined;
       } else {
-        console.log('FOUND ACCOUNT');
-        account.status = 'CONNECTED';
-        account.createOrUpdate();
-        var io = require('../sockets/accounts.server.socket.config').IO
-        if(io){
-          io.to('admin').emit("accountConnected", account._id);
-          console.log("sending account customer id to room: "+ account._id)
-          io.to(account_id).emit("accountConnected", account._id);
-        }
+        console.log('WEIRD - NO CUSTOMER ID');
       }
-    });
-    req.params.customerId = undefined;
-    return res.redirect(info.redirect_to || '/settings/accounts');
-    // req.login(user, function (err) {
-    //   if (err) {
-    //     return res.redirect('/authentication/signin');
-    //   }
-    //   return res.redirect(info.redirect_to || '/');
-    // });
+      console.log('FIND ACCOUNT = ' + customerId);
+      Account.findOne({ 
+        customerId: { $in: customerId }
+      }).exec(function (err, account) {
+        if (err) {
+          return res.status(422).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var accountToUpdate = account;
+          accountToUpdate.status = 'CONNECTED';
+          accountToUpdate.connected = new Date();
+          accountToUpdate.provider = 'adwords';
+          accountToUpdate.connectedUsers.push(user._id);
+          accountToUpdate.providerData = user.additionalProvidersData[account.customerId];
+          accountToUpdate.save(function (err) {
+            if (err) {
+              return res.status(422).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            }
+            var io = require('../../../../accounts/sockets/accounts.server.socket.config').IO;
+            if(io){
+              io.to('admin').emit("accountConnected", account);
+              console.log("sending account customer id to room: "+ account)
+              io.to(account_id).emit("accountConnected", account);
+            }
+            return res.redirect(info.redirect_to || '/settings/accounts');
+          });
+        }
+      });
+    }
   })(req, res, next);
 };
 
@@ -227,11 +262,9 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
       user = req.user;
       // Check if an existing user was found for this provider account
       if (existingUser) {
-        if (user.id !== existingUser.id) {
-          return done(new Error('Account is already connected to another user'), user, info);
+        if (user.id === existingUser.id) {
+          return done(new Error('User is already connected using this provider'), user, info);
         }
-
-        return done(new Error('User is already connected using this provider'), user, info);
       }
 
       // Add the provider data to the additional provider data field

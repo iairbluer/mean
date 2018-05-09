@@ -35,10 +35,10 @@
       vm.figureOutItemsToDisplay();
     }
     // GET CAMPAIGNS
-    CampaignsService.query(function (data){
-      console.log('RECEIVED DATA');
-      vm.campaigns = data;
-    });
+    // CampaignsService.query(function (data){
+    //   console.log('RECEIVED DATA');
+    //   vm.campaigns = data;
+    // });
     // EXPAND WELCOME
     vm.expandWelcome = expandWelcome;
     function expandWelcome() {

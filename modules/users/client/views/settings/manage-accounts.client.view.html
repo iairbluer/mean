@@ -1,50 +1,29 @@
 <section class="row">
   <h3 class="col-md-12 text-center" ng-show="vm.hasConnectedAdditionalAccounts()">Connected accounts:</h3>
   <div class="col-md-12 text-center">
-    <!-- If the user's provider field (primary) is a social account, show it here -->
-    <!-- <div ng-if="vm.user.provider !== 'local'" class="social-account-container">
-      <img ng-src="/modules/users/client/img/buttons/{{vm.user.provider}}.png">
-      <i class="glyphicon glyphicon-check text-success user-primary-account" data-toggle="popover" title="Primary: {{vm.user.provider}}"></i>
-    </div> -->
     <div class="acc-holder" ng-show="vm.hasConnectedAdditionalAccounts()">
         <ul>
-          <li ng-repeat="(provider, providerData) in vm.user.additionalProvidersData">
+          <li ng-repeat="account in vm.connectedAccounts">
             <div class="row">
               <div class="col-xs-12 col-sm-6 col-md-6 flex-start-center flex-row">
                 <img class="social-button" ng-src="/modules/users/client/img/buttons/googleAdwords.png">
-                <label>{{ provider }}</label>
+                <label>{{ account.customerId }}</label>
               </div>
               <div class="col-xs-12 col-sm-6 col-md-6 flex-end-center flex-row actions">
                 <a href="#" ui-sref="accounts.view({ accountId: account._id })" class="btn btn-info btn-info-icon pull-right">
                   <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
                   VIEW
                 </a>
-                <!-- <a href="#" ng-click="vm.connectAccount(account);" class="btn btn-success btn-green-icon pull-right">
-                    <i class="glyphicon glyphicon-log-in" aria-hidden="true"></i>
-                    CONNECT
-                </a> -->
-                <a href="#" ng-click="vm.removeUserAccount(provider)" class="btn btn-daner btn-red-icon pull-right">
+                <a href="#" ng-click="vm.removeUserAccount(account.customerId)" class="btn btn-daner btn-red-icon pull-right">
                   <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                   DELETE</a>
               </div>
             </div>
           </li>
         </ul>
-        <!-- <div class="row">
-              <div class="col-xs-12">
-                  <a href="#" class="btn btn-default btn-orange-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i>ADD AN ACCOUNT</a>
-              </div>
-          </div> -->
       </div>
     </div>
-    <!-- <div ng-repeat="(provider, providerData) in vm.user.additionalProvidersData" class="social-account-container">
-        <a href ui-sref="settings.accounts.viewAccount({ provider: provider, providerData: providerData.accessToken })">
-          <img class="social-button" ng-src="/modules/users/client/img/buttons/googleAdwords.png">
-        </a>
-        <button class="btn btn-danger btn-add-remove-account" ng-click="vm.removeUserAccount(provider)">
-          <i class="glyphicon glyphicon-trash"></i>
-        </button>
-    </div> -->
+
     <h3 class="col-md-12 text-center" ng-show="vm.disconnectedAccounts && vm.disconnectedAccounts.length">Available accounts to connect:</h3>
     <!-- class="social-account-container" -->
     <div class="acc-holder" ng-show="vm.disconnectedAccounts && vm.disconnectedAccounts.length">
@@ -71,52 +50,9 @@
           </div>
         </li>
       </ul>
-      <!-- <div class="row">
-            <div class="col-xs-12">
-                <a href="#" class="btn btn-default btn-orange-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i>ADD AN ACCOUNT</a>
-            </div>
-        </div> -->
     </div>
   </div>
-  <!-- <h3 class="col-md-12 text-center">Add account:</h3> -->
-  <!-- CONNECT A FACEBOOK ADS ACCOUNT -->
-  <!-- <div class="col-md-12 text-center"> -->
-    <!-- <div class="social-account-container"> -->
-      <!-- <a href="" ng-click="vm.showAddAccountDialog('facebook');"> -->
-        <!-- <img class="social-button" ng-src="/modules/users/client/img/buttons/facebookAds.png"> -->
-        <!-- <span class="btn btn-success btn-add-remove-account"> -->
-          <!-- <i class="glyphicon glyphicon-plus"></i> -->
-        <!-- </span> -->
-      <!-- </a> -->
-    <!-- </div> -->
-    <!-- CONNECT GOOGLE ADWORDS ACCOUNT -->
-    <!-- <div class="social-account-container"> -->
-      <!-- <a href="" ng-click="vm.showAddAccountDialog('google');"> -->
-        <!-- <img class="social-button" ng-src="/modules/users/client/img/buttons/googleAdwords.png"> -->
-        <!-- <span class="btn btn-success btn-add-remove-account"> -->
-          <!-- <i class="glyphicon glyphicon-plus"></i> -->
-        <!-- </span> -->
-      <!-- </a> -->
-    <!-- </div> -->
-    <!-- CONNECT BING ACCOUNT -->
-    <!-- <div class="social-account-container" > -->
-      <!-- <a href="" ng-click="vm.showAddAccountDialog('bing');"> -->
-        <!-- <img class="social-button" ng-src="/modules/users/client/img/buttons/bingAds.png"> -->
-        <!-- <span class="btn btn-success btn-add-remove-account"> -->
-          <!-- <i class="glyphicon glyphicon-plus"></i> -->
-        <!-- </span> -->
-      <!-- </a> -->
-    <!-- </div> -->
-    <!-- CONNECT DOUBLECLICK ACCOUNT -->
-    <!-- <div class="social-account-container">
-      <a href="" ng-click="vm.callOauthProvider('/api/auth/linkedin')">
-        <img class="social-button" ng-src="/modules/users/client/img/buttons/linkedin.png">
-        <span class="btn btn-success btn-add-remove-account">
-          <i class="glyphicon glyphicon-plus"></i>
-        </span>
-      </a>
-    </div> -->
-  <!-- </div> -->
+
   <script type="text/ng-template" id="add-google-account-dialog.html">
     <div class="modal-header">
       <h3>Connect A Google AdWords Account</h3>
@@ -138,13 +74,6 @@
               <p class="help-block error-text" ng-message="required">Customer name is required.</p>
             </div>
           </div>
-          <!-- <div class="form-group" show-errors>
-              <label for="clientSecret">Client Secret</label>
-              <input id="clientSecret" type="text" name="clientSecret" class="form-control" ng-model="AD.accountCredentials.clientSecret" placeholder="Your adwords client secret" required autofocus />
-              <div ng-messages="AD.addAccountForm.clientSecret.$error" role="alert">
-                <p class="help-block error-text" ng-message="required">Client secret is required.</p>
-              </div>
-            </div> -->
         </fieldset>
         <menu>
           <button class="btn btn-primary" type="submit">Add Adwords Account</button>
@@ -153,7 +82,6 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-danger" type="button" ng-click="AD.cancel();">Close</button>
-      <!-- <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button> -->
     </div>
   </script>
 </section>

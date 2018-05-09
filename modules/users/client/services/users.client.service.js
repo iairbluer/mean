@@ -78,12 +78,22 @@
   AdminService.$inject = ['$resource'];
 
   function AdminService($resource) {
-    return $resource('/api/users/:userId', {
+    var Users = $resource('/api/users/:userId', {
       userId: '@_id'
     }, {
       update: {
         method: 'PUT'
+      },
+      addUser: {
+        method: 'POST',
+        url: '/api/users'
       }
     });
+    angular.extend(Users, {
+      addUser: function (credentials) {
+        return this.addUser(credentials).$promise;
+      },
+    });
+    return Users;
   }
 }());

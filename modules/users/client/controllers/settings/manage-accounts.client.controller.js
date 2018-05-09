@@ -14,12 +14,12 @@
     vm.save = save;
     vm.connectAccount = connectAccount;
     vm.remove = remove;
-    vm.refreshDisconnectedAccounts = refreshDisconnectedAccounts;
+    vm.refreshAccounts = refreshAccounts;
     vm.hasConnectedAdditionalAccounts = hasConnectedAdditionalAccounts;
     vm.isConnectedAccount = isConnectedAccount;
     vm.removeUserAccount = removeUserAccount;
     vm.callOauthProvider = callOauthProvider;
-    vm.refreshDisconnectedAccounts();
+    vm.refreshAccounts();
     if (!vm.accountToConnect) {
       console.log('NO ACCOUNT TO CONNECT');
     } else {
@@ -27,12 +27,18 @@
     }
     if (vm.hasConnectedAdditionalAccounts()) {
       console.log('HAVE ACCOUNTS CONNECTED');
-      vm.refreshDisconnectedAccounts();
+      vm.refreshAccounts();
     }
     // REFRESH DISCONNECT ACCOUNT FUNCTION
-    function refreshDisconnectedAccounts() {
+    function refreshAccounts() {
       vm.disconnectedAccounts = [];
-      var additionalDataKeys = Object.keys(vm.user.additionalProvidersData);
+      vm.connectedAccounts = [];
+      var additionalDataKeys = null;
+      if (vm.user.additionalProvidersData) {
+        additionalDataKeys = Object.keys(vm.user.additionalProvidersData);
+      } else {
+        additionalDataKeys = [];
+      }
       for (var additionalDataIndex = 0; additionalDataIndex < additionalDataKeys.length; additionalDataIndex++) {
         var accountFound = false; 
         for (var accountIndex = 0; accountIndex < vm.accounts.length && !accountFound; accountIndex++) {
@@ -41,6 +47,8 @@
             accountFound = true;
             vm.accounts[accountIndex].status = 'CONNECTED';
             vm.accounts[accountIndex].connected = new Date();
+            vm.accounts[accountIndex].proverData = additionalDataKeys[additionalDataIndex];
+            vm.connectedAccounts.push(vm.accounts[accountIndex]);
           }
         }
       }
@@ -60,6 +68,7 @@
         var url = '/api/auth/google/clientId/' + vm.accountToConnect.customerId;
         // var indexToSplice = vm.accounts
         // MAKING OAUTH CALL
+        vm.accountToConnect = null;
         vm.callOauthProvider(url);
       }
       
@@ -95,7 +104,8 @@
     function onRemoveAccountSuccess(response) {
       // If successful show success message and clear form
       Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Removed successfully!' });
-      vm.user = Authentication.user = response;
+      vm.user = response;
+      vm.refreshAccounts();
     }
 
     function onRemoveAccountError(response) {

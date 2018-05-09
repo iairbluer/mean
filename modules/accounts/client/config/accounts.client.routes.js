@@ -18,7 +18,10 @@
         url: '',
         templateUrl: '/modules/accounts/client/views/list-accounts.client.view.html',
         controller: 'AccountsListController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        resolve: {
+          accountsResolve: getAccounts
+        },
       })
       .state('accounts.view', {
         url: '/:accountId',
@@ -39,6 +42,13 @@
   function getAccount($stateParams, AccountsService) {
     return AccountsService.get({
       accountId: $stateParams.accountId
+    }).$promise;
+  }
+  getAccounts.$inject = ['$stateParams', 'AccountsService'];
+
+  function getAccounts($stateParams, AccountsService) {
+    return AccountsService.query({
+      userId: $stateParams.userId
     }).$promise;
   }
 }());

@@ -57,8 +57,7 @@
                 <!-- class="flex-center-center flex-row" -->
                 <!-- <li > -->
                   <!-- <ul class="nav navbar-nav" ng-if="vm.menu.shouldRender(vm.authentication.user);"> -->
-                  <li ng-show="vm.authentication.user &&
-                      vm.authentication.user.roles.indexOf('admin') !== -1"
+                  <li ng-show="vm.authentication.user"
                       class="flex-center-center flex-row"
                       ng-repeat="item in vm.menu.items | orderBy: 'position'"
                       ng-if="item.shouldRender(vm.authentication.user);"

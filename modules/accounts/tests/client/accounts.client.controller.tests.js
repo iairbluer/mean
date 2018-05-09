@@ -1,9 +1,9 @@
 (function () {
   'use strict';
 
-  describe('Articles Controller Tests', function () {
+  describe('Accounts Controller Tests', function () {
     // Initialize global variables
-    var ArticlesController,
+    var AccountsController,
       $scope,
       $httpBackend,
       $state,
@@ -36,7 +36,7 @@
     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
     // This allows us to inject a service but then attach it to a variable
     // with the same name as the service.
-    beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _ArticlesService_) {
+    beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _AccountsService_) {
       // Set a new global scope
       $scope = $rootScope.$new();
 
@@ -44,10 +44,10 @@
       $httpBackend = _$httpBackend_;
       $state = _$state_;
       Authentication = _Authentication_;
-      ArticlesService = _ArticlesService_;
+      AccountsService = _AccountsService_;
 
       // create mock article
-      mockArticle = new ArticlesService({
+      mockAccount = new AccountsService({
         _id: '525a8422f6d0f87f0e407a33',
         title: 'An Article about MEAN',
         content: 'MEAN rocks!'
@@ -59,9 +59,9 @@
       };
 
       // Initialize the Articles controller.
-      ArticlesController = $controller('ArticlesController as vm', {
+      AccountsController = $controller('AccountsController as vm', {
         $scope: $scope,
-        articleResolve: {}
+        accountResolve: {}
       });
 
       // Spy on state go

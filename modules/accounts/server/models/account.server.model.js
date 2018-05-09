@@ -38,6 +38,10 @@ var AccountSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
+  authorizedUsers: {
+    type: [Schema.ObjectId],
+    ref: 'User'
+  },
   authenticatedUsers: {
     type: [Schema.ObjectId],
     ref: 'User'

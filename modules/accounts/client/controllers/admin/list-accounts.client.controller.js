@@ -16,7 +16,6 @@
     vm.remove = remove;
     vm.connectAccount = connectAccount;
     vm.callOauthProvider = callOauthProvider;
-
     AccountsService.query(function (data) {
       console.log('DATA RECEIVED LIST ACCOUNTS ADMIN = ' + JSON.stringify(data));
       vm.accounts = data;

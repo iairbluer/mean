@@ -148,8 +148,8 @@
     getAccount.$inject = ['$stateParams', 'AccountsService'];
     
     function getAccount($stateParams, AccountsService) {
-      return AccountsService.get({
-        accountId: $stateParams.accountId
+      return AccountsService.query({
+        userId: $stateParams.userId
       }).$promise;
     }
   }

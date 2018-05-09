@@ -126,7 +126,7 @@ exports.list = function (req, res) {
   } else {
     console.log('LIST ACCOUNTS USER');
     Account.find({
-      customerId: {$in: req.user.accounts}
+      _id: { $in: req.user.accounts }
     }).sort('-created').exec(function (err, accounts) {
       if (err) {
         return res.status(422).send({
@@ -162,6 +162,28 @@ exports.accountByID = function (req, res, next, id) {
     next();
   });
 };
+// exports.accountByUserID = function (req, res, next, id) {
+
+//   if (!mongoose.Types.ObjectId.isValid(id)) {
+//     return res.status(400).send({
+//       message: 'User ID is invalid'
+//     });
+//   }
+
+//   Account.find({
+//     authorizedUsers: { $in : id }
+//   }).populate('user', 'username').exec(function (err, account) {
+//     if (err) {
+//       return next(err);
+//     } else if (!account) {
+//       return res.status(404).send({
+//         message: 'No accounts with that identifier (AUTH USERS) has been found'
+//       });
+//     }
+//     req.account = account;
+//     next();
+//   });
+// };
 
 /**
  * Account middleware

@@ -1,0 +1,104 @@
+
+<section>
+    <div class="dialogTopLeft">
+        <div class="dialogTopLeftMargin">
+        <h1>New User</h1>
+        </div>
+    </div>
+    <div class="dialogTopRight" ui-sref="admin.users">
+        <div class="dialogTopRightMargin"></div>
+    </div>
+    <div style="clear: both;"></div>
+    <div class="dialogMarginLeft">
+        <form name="vm.userForm" ng-submit="vm.addUser(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
+            <fieldset>
+              <div class="form-group" show-errors>
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" class="form-control" ng-model="vm.credentials.firstName" placeholder="First Name" required autofocus>
+                <div ng-messages="vm.userForm.firstName.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">First name is required.</p>
+                </div>
+              </div>
+              <div class="form-group" show-errors>
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" class="form-control" ng-model="vm.credentials.lastName" placeholder="Last Name" required>
+                <div ng-messages="vm.userForm.lastName.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Last name is required.</p>
+                </div>
+              </div>
+              <div class="form-group" show-errors>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" ng-model="vm.credentials.email" placeholder="Email" lowercase required>
+                <div ng-messages="vm.userForm.email.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Email address is required.</p>
+                  <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
+                </div>
+              </div>
+              <div class="form-group" show-errors>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" ng-model="vm.credentials.username" ng-pattern="vm.usernameRegex" placeholder="Username" lowercase required>
+                <div ng-messages="vm.userForm.username.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Username is required.</p>
+                  <p class="help-block error-text" ng-message="pattern">Please enter a valid username: 3+ characters long, non restricted word, characters "_-.", no consecutive dots, does not begin or end with dots, letters a-z and numbers 0-9.</p>
+                </div>
+              </div>
+              <div class="form-group" show-errors>
+                  <label class="control-label" for="roles">Roles</label>
+                  <div class="controls" ng-init="vm.credentials.roles = ['user']">
+                    <input class="form-control" type="text" name="roles" ng-model="vm.credentials.roles" id="roles" ng-list required />
+                    <div ng-messages="vm.userForm.roles.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">At least one role is required.</p>
+                    </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="isAdmin">Add Admin Role</label>
+                <div class="controls">
+                  <input id="isAdmin" type="checkbox" value="admin" ng-model="vm.credentials.isAdmin" ng-checked="vm.credentials.isAdmin" ng-click="toggleIsAdmin()" />
+                  <label>Make User Admin</label>
+                </div>
+              </div>
+              <div class="form-group" show-errors>
+                  <label class="control-label" for="accounts">Authorized Accounts</label>
+                  <div class="controls">
+                    <input id="accounts" type="text" name="accounts" ng-model="vm.credentials.accounts" class="form-control" ng-list required>
+                    <div ng-messages="vm.userForm.accounts.$error" role="alert">
+                        <p class="help-block error-text" ng-message="required">At least one brand is required.</p>
+                    </div>
+                    <div ng-repeat="account in vm.accounts">
+                      <div class="action-checkbox">
+                        <input id="{{account.customerName}}" type="checkbox" value="{{account._id}}" ng-checked="vm.selection.indexOf({ customerName: account.customerName }) > -1" ng-click="toggleSelection(account)" />
+                        <label for="{{account.customerName}}"></label>
+                        {{account.customerName}}
+                      </div>
+                    </div>
+                    <!-- <span style="color:white;" class="selected-item">Selected Items:<span>
+                    <div ng-repeat="name in selection" class="selected-item">
+                      {{name}}
+                    </div> -->
+                    
+                  </div>
+              </div>
+              <div class="form-group" show-errors>
+                <label for="password">Password</label>
+                  <input type="password" id="password" name="password" class="form-control" ng-model="vm.credentials.password" placeholder="Password" uib-popover="{{vm.getPopoverMsg()}}" popover-trigger="outsideClick" password-validator required>
+                <div ng-messages="vm.userForm.password.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Password is required.</p>
+                  <div ng-repeat="passwordError in passwordErrors">
+                    <p class="help-block error-text" ng-show="vm.userForm.password.$error.requirements">{{passwordError}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group" ng-show="!vm.userForm.password.$error.required">
+                <label>Password Requirements</label>
+                <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}"><span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span></uib-progressbar>
+              </div>
+              <div class="text-center form-group">
+                <button type="submit" class="btn btn-primary">Add User</button>
+              </div>
+            </fieldset>
+          </form>
+    </div>
+    
+</section>
+      

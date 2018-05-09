@@ -2,10 +2,14 @@
   <div class="page-header">
     <h1>Accounts</h1>
   </div>
+  <div class="col-md-4" style="margin-top: 2em">
+    Search Accounts
+    <input class="form-control col-md-4" type="text" ng-model="vm.search" placeholder="Search" ng-change="vm.figureOutItemsToDisplay()" />
+  </div>
   <div class="col-md-12 text-center">
     <div class="acc-holder">
       <ul>
-        <li ng-repeat="account in vm.accounts">
+        <li ng-repeat="account in vm.pagedItems">
           <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6 flex-start-center flex-row">
               <img src="/modules/users/client/img/buttons/googleAdwords.png" alt=""/>
@@ -32,10 +36,8 @@
           </div>
         </li>
       </ul>
-      <!-- <div class="row">
-        <div class="col-xs-12">
-        <a href="#" class="btn btn-default btn-orange-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i>ADD AN ACCOUNT</a>
-      </div> -->
     </div>
+    <uib-pagination boundary-links="true" max-size="8" items-per-page="vm.itemsPerPage" total-items="vm.filterLength" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>
+
   </div>
 </section>

@@ -18,14 +18,17 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/accounts',
       permissions: '*'
     }, {
-      resources: '/api/accounts/:customerId',
+      resources: '/api/accounts/:accountId',
       permissions: '*'
     }]
   }, {
     roles: ['user'],
     allows: [{
-      resources: '/api/accounts/:accountId',
+      resources: '/api/accounts',
       permissions: ['*']
+    }, {
+      resources: '/api/accounts/:accountId',
+      permissions: '*'
     }]
   }]);
 };
